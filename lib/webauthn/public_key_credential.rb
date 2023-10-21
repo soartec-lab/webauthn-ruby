@@ -4,9 +4,13 @@ require "webauthn/encoder"
 
 module WebAuthn
   class PublicKeyCredential
+    class RequiredError < Error; end
+
     attr_reader :type, :id, :raw_id, :client_extension_outputs, :authenticator_attachment, :response
 
     def self.from_client(credential, relying_party: WebAuthn.configuration.relying_party)
+      raise RequiredError if credential.nil?
+
       new(
         type: credential["type"],
         id: credential["id"],
